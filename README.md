@@ -12,7 +12,7 @@ Data sources should cover soil, weather, and possibly administrative data. The c
 A set of 250m resolution global raster layers with soil properties such as pH, soc, clay content, bulk density, etc. See this (list)[https://maps.isric.org/] of available layers.  
 (Documentation for querying the data using WCS from python)[https://www.isric.org/web-coverage-services-wcs] - see OWSLib
 
-Task: Write a function that receives a georeferenced Polygon (using for example Shapely) and a the name of a soilgrids source layer. It should be possible to pass options to receive either: 1.) the original raster clipped to the polygon extent or 2.) descriptive statistics (mean, median, std, etc.) for all raster cells covered by the polygon.
+__task__: Write a function that receives a georeferenced Polygon (using for example Shapely) and a the name of a soilgrids source layer. It should be possible to pass options to receive either: 1.) the original raster clipped to the polygon extent or 2.) descriptive statistics (mean, median, std, etc.) for all raster cells covered by the polygon.
 
 #### 1.1.2 Restor
 TBD, see platform (here)[https://restor.eco/]

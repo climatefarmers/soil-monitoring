@@ -15,10 +15,13 @@ A set of 250m resolution global raster layers with soil properties such as pH, s
 Task: Write a function that receives a georeferenced Polygon (using for example Shapely) and a the name of a soilgrids source layer. It should be possible to pass options to receive either: 1.) the original raster clipped to the polygon extent or 2.) descriptive statistics (mean, median, std, etc.) for all raster cells covered by the polygon.
 
 #### 1.1.2 Restor
-TBD
+TBD, see platform (here)[https://restor.eco/]
 
 #### 1.1.3 Vandersat
 Partnership TBD
+
+### 1.2 Weather data
+Use publicly available sources for temperature, humidity, precipation, wind etc. and implement the same functionality as described above. 
 
 ## 2. Workflow executor
 TBD

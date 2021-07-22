@@ -155,10 +155,10 @@ if __name__ == "__main__":
     url = "?map=".join((soilgrids_base_url, soilgrids_soc))
     s_crs = "EPSG:4326"
 
+    
 
     layers = get_wcs_available_layers(url)
     print(layers)
-    #raise ValueError
 
     field = read_shapefile(shp)
     transformed = reproject_field_geom(field['geometry'], s_crs)
@@ -166,6 +166,10 @@ if __name__ == "__main__":
     subsets = get_wcs_subsets(bbox)
 
     area_ha = shape(transformed).area / 10000
+
+    print("###############################")
+    print("Results:")
+    print("###############################")
     print('Area: ', area_ha)
 
     for type in SOILGRIDS_TYPES:

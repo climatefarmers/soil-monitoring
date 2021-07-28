@@ -11,6 +11,8 @@ import numpy as np
 
 from shapely.geometry import shape, Point, Polygon
 
+SOILGRIDS_BASE_URL = "https://maps.isric.org/mapserv"
+
 SOILGRIDS_CRS = CRS.from_string("""
     PROJCS["Homolosine", 
         GEOGCS["WGS 84", 
@@ -38,20 +40,56 @@ SOILGRIDS_DEPTHS = [
     (100-200)
 ]
 
-SOILGRIDS_PRODUCTS = [
-    'soc',          # Soil organic carbon content
-    'bdod',         # Bulk density
-    'clay',         # Clay content
-    'wrb',          # WRB classes and probabilites
-    'cec',          # Cation exchange capacity at ph 7
-    'cfvo',         # Coarse fragments volumetric
-    'nitrogen',     # Nitrogen
-    'phh20',        # Soil pH in H2O
-    'sand',         # Sand content
-    'silt',         # Silt content
-    'ocs',          # Soil organic carbon stock
-    'ocd'           # Organic carbon densities
-]
+SOILGRIDS_PRODUCTS = {
+    'soc': {
+        'description': 'Soil organic carbon content',
+        'unit': 'dg/kg'
+        },
+    'bdod': {
+        'description': 'Bulk density',
+        'unit': 'cg/cm³'
+        },
+    'clay': {
+        'description': 'Clay content',
+        'unit': 'g/kg'
+        },
+    'wrb': {
+        'description': 'WRB classes and probabilites',
+        'unit': None
+        },
+    'cec': {
+        'description': 'Cation exchange capacity at ph 7',
+        'unit': 'mmol(c)/kg'
+        },
+    'cfvo': {
+        'description': 'Coarse fragments volumetric',
+        'unit': 'cm3/dm3 (vol‰)'
+        },
+    'nitrogen': {
+        'description': 'Nitrogen',
+        'unit': 'cg/kg'
+        },
+    'phh20': {
+        'description': 'Soil pH in H2O',
+        'unit': 'pHx10'
+        },
+    'sand': {
+        'description': 'Sand content',
+        'unit': 'g/kg'
+        },
+    'silt': {
+        'description': 'Silt content',
+        'unit': 'g/kg'
+        },
+    'ocs': {
+        'description': 'Soil organic carbon stock',
+        'unit': 't/ha'
+        },
+    'ocd': {
+        'description': 'Organic carbon densities',
+        'unit': 'hg/m³'
+        },
+}
 
 SOILGRIDS_TYPES = [
     'Q0.05',
@@ -142,21 +180,34 @@ def points_in_boundary(response, boundary):
 
 def get_stats(values, stats=['mean', 'min', 'max', 'std']):
     values = np.array(values)
-    return [getattr(np, s)(values) for s in stats]
+    return {s: float(getattr(np, s)(values)) for s in stats}
 
+def stats_for_polygon(geometry, crs, lyr):
+    product = lyr.split('_')[0]
+    map_route = f"/map/{product}.map"
+    url = "?map=".join((SOILGRIDS_BASE_URL, map_route))
+
+    transformed = reproject_field_geom(geometry, crs)
+    bbox = get_bbox(transformed)
+    subsets = get_wcs_subsets(bbox)
+    response = get_wcs_layer(url, lyr, subsets)
+    points, values = points_in_boundary(response, shape(transformed))
+    stats = get_stats(values)
+    return {
+        'statistics': stats,
+        'unit': SOILGRIDS_PRODUCTS[product]['unit']
+    }
 
 if __name__ == "__main__":
-
+    # For local run with shapefile path
     shp = sys.argv[1]
-    soilgrids_base_url = "https://maps.isric.org/mapserv"
     soilgrids_soc = "/map/ocs.map" #"/map/soc.map"
 
     layer = "ocs_0-30cm" #"soc_0-5cm_mean"
-    url = "?map=".join((soilgrids_base_url, soilgrids_soc))
+    url = "?map=".join((SOILGRIDS_BASE_URL, soilgrids_soc))
     s_crs = "EPSG:4326"
 
-    
-
+    import pdb; pdb.set_trace()
     layers = get_wcs_available_layers(url)
     print(layers)
 
@@ -171,6 +222,8 @@ if __name__ == "__main__":
     print("Results:")
     print("###############################")
     print('Area: ', area_ha)
+
+    print(url)
 
     for type in SOILGRIDS_TYPES:
         lyr = '_'.join((layer, type))

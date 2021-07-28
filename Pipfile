@@ -11,6 +11,8 @@ owslib = "*"
 fiona = "*"
 pyproj = "*"
 rasterstats = "*"
+fastapi = "*"
+uvicorn = "*"
 
 [dev-packages]
 notebook = "*"

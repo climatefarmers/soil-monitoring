@@ -12,4 +12,4 @@ COPY . /code/
 RUN python -m compileall .
 
 ENTRYPOINT ["uvicorn"]
-CMD ["main:app", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["main:app", "--host", "0.0.0.0", "--port", "8000"]

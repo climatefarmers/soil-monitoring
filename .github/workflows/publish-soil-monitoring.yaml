@@ -1,4 +1,4 @@
-name: Farmdb build and publish
+name: Soil Monitoring build and publish
 
 on:
   schedule:

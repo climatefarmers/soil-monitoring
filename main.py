@@ -71,6 +71,10 @@ class SoilStats(BaseModel):
 
 app = FastAPI()
 
+@app.get("/health")
+async def healthcheck():
+    return {"status": "alive"}
+
 @app.post("/soilgrids/{lyr}", response_model=SoilStats)
 async def address_parser(aoi: GeoJsonPolygonFeatureCollection, lyr: str) -> SoilStats:
 

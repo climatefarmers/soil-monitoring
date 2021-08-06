@@ -71,6 +71,10 @@ class SoilStats(BaseModel):
 
 app = FastAPI()
 
+@app.get("/")
+async def index():
+    return {"status": "alive"}
+
 @app.get("/health")
 async def healthcheck():
     return {"status": "alive"}
